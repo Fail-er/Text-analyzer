@@ -43,8 +43,8 @@ users_and_passwords = {
 username = input("Username: ").lower()
 password = input("Password: ")
 
-if (username in users_and_passwords and password ==
-     users_and_passwords[username]):
+if (username in users_and_passwords
+        and password == users_and_passwords[username]):
     print(
         f'{"_"*79}\n'
         f"Welcome to the app, {username} "
@@ -105,7 +105,9 @@ else:
             total_digit_count += int(word)
 
         # Vytvoření slovníku s počtem výskytů délky slov
-        total_word_len_count[len(word)] = total_word_len_count.get(len(word), 0) + 1
+        total_word_len_count[len(word)] = (
+            total_word_len_count.get(len(word), 0) + 1
+        )
 
 
 print(
