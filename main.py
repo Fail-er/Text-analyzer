@@ -40,90 +40,87 @@ users_and_passwords = {
     "liz": "pass123"
 }
 
-validate = False
-
-username = input("Ussername: ")
+username = input("Username: ").lower()
 password = input("Password: ")
 
-if (username in users_and_passwords and password in
+if (username in users_and_passwords and password ==
      users_and_passwords[username]):
-    validate = True
     print(
         f'{"_"*79}\n'
         f"Welcome to the app, {username} "
         f"We have {len(TEXTS)} texts to be analyzed.\n"
-    )       
+    )
 
 else:
     print("Unregistered user, terminating the program..")
+    exit()
 
 
-titlecase_number = 0          # Počet slov začínajících velkým písmenem 
+TEXTS_split = []         # List textů rozdělených na slova
+titlecase_number = 0          # Počet slov začínajících velkým písmenem
 uppercase_number = 0          # Počet slov obsahujících jen velká písmena
-lowercase_number = 0          # Počet slov začínajících malým písmenem  
+lowercase_number = 0          # Počet slov začínajících malým písmenem
 digit_string_number = 0       # Počet číselných řetězců
 total_digit_count = 0         # Celkový součet číselných řetězců
 total_word_len_count = dict() # Slovník s počtem výskytů délky slov
 
 
-if validate:
-    print(f'{"_"*79}')
-    text_number = input(f"Enter a number btw. 1 and {len(TEXTS)} to select: ")     
-    
-    # Kontrola formátu zadání
-    if int(text_number) > len(TEXTS)\
-        or text_number < "1":
-        print("Invalid number, terminating the program..")
 
-    elif not text_number.isdigit():
-        print("Input must be a number, terminating the program..")
-    
-    elif (text_number.isdigit() and int(text_number)
-        in range(1, len(TEXTS) + 1)):
-        
-        # Výpočet počtu slov začínajících velkým písmenem        
-        for titlecase in TEXTS[int(text_number) - 1].split(): 
-            if titlecase.istitle():
-                titlecase_number += 1
-        
+print(f'{"_"*79}')
+text_number = input(f"Enter a number btw. 1 and {len(TEXTS)} to select: ")
+
+
+# Kontrola formátu zadání
+if not text_number.isdigit():
+    print("Input must be a number, terminating the program..")
+    exit()
+
+else:
+    text_number = int(text_number)
+    if text_number < 1 or text_number > len(TEXTS):
+        print("Invalid number, terminating the program..")
+        exit()
+
+    else:
+        TEXTS_split = TEXTS[text_number -1].split()
+
+
+    for word in TEXTS_split:
+
+        # Výpočet počtu slov začínajících velkým písmenem
+        if word.istitle():
+            titlecase_number += 1
+
         # Výpočet počtu slov obsahujících jen velká písmena
-        for uppercase in TEXTS[int(text_number) - 1].split():
-            if uppercase.isupper():
-                uppercase_number += 1
-        
+        if word.isupper():
+            uppercase_number += 1
+
         # Výpočet počtu slov začínajících malým písmenem
-        for lowercase in TEXTS[int(text_number) - 1].split():
-            if lowercase.islower():
-                lowercase_number += 1
-        
-        # Výpočet počtu číselných řetězců
-        for digit_string in TEXTS[int(text_number) - 1].split():
-            if digit_string.isdigit():
-                digit_string_number += 1
-        
-        # Výpočet celkového součtu číselných řetězců
-        for digit_string in TEXTS[int(text_number) - 1].split():
-            if digit_string.isdigit():
-                total_digit_count += int(digit_string)
-        
+        if word.islower():
+            lowercase_number += 1
+
+        # Výpočet počtu číselných řetězců a jejich součtu
+        if word.isdigit():
+            digit_string_number += 1
+            total_digit_count += int(word)
+
         # Vytvoření slovníku s počtem výskytů délky slov
-        for word in TEXTS[int(text_number) - 1].split():
-            total_word_len_count.update({
-                len(word): total_word_len_count.get(len(word), 0) + 1
-            }) 
-        
-        print(
-            f"There are {len(TEXTS[int(text_number) - 1].split())} words "
-            f"in the selected text.\n"
-            f"There are {titlecase_number} titlecase words.\n"
-            f"There are {uppercase_number} uppercase words.\n"
-            f"There are {lowercase_number} lowercase words.\n"
-            f"There are {digit_string_number} numeric strings.\n"
-            f"The sum of all the numbers {total_digit_count}.\n"
-            f"{'_' * 79}\n"
-            f"LEN|{' ' * 2}OCCURENCES{' ' * 2}|NR.\n"
-            f"{'_' * 79}\n"
+        total_word_len_count[len(word)] = total_word_len_count.get(len(word), 0) + 1
+
+
+print(
+        f"There are {len(TEXTS_split)} words "
+        f"in the selected text.\n"
+        f"There are {titlecase_number} titlecase words.\n"
+        f"There are {uppercase_number} uppercase words.\n"
+        f"There are {lowercase_number} lowercase words.\n"
+        f"There are {digit_string_number} numeric strings.\n"
+        f"The sum of all the numbers {total_digit_count}.\n"
+        f"{'_' * 79}\n"
+        f"LEN|{' ' * 2}OCCURENCES{' ' * 2}|NR.\n"
+        f"{'_' * 79}\n"
         )
-        
-        for length, occurrences in total_word_len_count.items():
-            print(f"{length}| {'*' * occurrences} {occurrences}")
+
+for length, occurrences in total_word_len_count.items():
+    print(f"{length}| {'*' * occurrences} {occurrences}")
+
